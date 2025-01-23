@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Tambah Resep{% endblock title %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Add New Recipe</h1>
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-4" id="form_resep">
+        {% csrf_token %}
+
+        <!-- Recipe Name -->
+        <div>
+            <label class="label">
+                <span class="label-text">Recipe Name</span>
+            </label>
+            <input type="text" name="name" placeholder="Recipe Name" class="input input-bordered w-full" required>
+        </div>
+
+        <!-- Category -->
+        <div>
+            <label class="label">
+                <span class="label-text">Category</span>
+            </label>
+            <input type="text" name="category" placeholder="Category" class="input input-bordered w-full" required>
+        </div>
+
+        <!-- Area -->
+        <div>
+            <label class="label">
+                <span class="label-text">Area</span>
+            </label>
+            <input type="text" name="area" placeholder="Area" class="input input-bordered w-full" required>
+        </div>
+
+        <!-- Instructions -->
+        <div class="prose max-w-full">
+            <label class="label">
+                <span class="label-text">Instructions</span>
+            </label>
+            <textarea name="instructions" id="instructions" placeholder="Instructions" class="textarea textarea-bordered w-full" required></textarea>
+        </div>
+
+        <!-- Video URL -->
+        <div>
+            <label class="label">
+                <span class="label-text">Video URL</span>
+            </label>
+            <input type="url" name="videoUrl" placeholder="Video URL" class="input input-bordered w-full">
+        </div>
+
+        <!-- Image Upload (Dropzone) -->
+        <div>
+            <label class="label">
+                <span class="label-text">Image</span>
+            </label>
+            <div id="dropzone" class="flex items-center justify-center p-4 border-2 border-dashed border-primary rounded-lg cursor-pointer">
+                <input type="file" name="image" id="fileInput" class="hidden" onchange="handleFileSelect(event)">
+                <p class="text-center text-primary">Drag and drop an image here or click to select</p>
+            </div>
+        </div>
+
+        <!-- Ingredients Section -->
+        <div>
+            <label class="label">
+                <span class="label-text">Ingredients</span>
+            </label>
+            <div id="ingredients" class="space-y-2">
+                <div class="flex gap-2 items-center">
+                    <input type="text" name="ingredients[][name]" placeholder="Ingredient Name" class="input input-bordered w-full" required>
+                    <input type="text" name="ingredients[][value]" placeholder="Ingredient Value" class="input input-bordered w-full" required>
+                </div>
+            </div>
+            <button type="button" onclick="addIngredient()" class="btn btn-primary mt-2">Add Ingredient</button>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+            <button onclick="ConvertMarkdown()" type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script>
+    // Initialize SimpleMDE
+    const simplemde = new SimpleMDE({ element: document.getElementById("instructions") });
+
+    // Function to add an ingredient input
+    function addIngredient() {
+        const ingredientDiv = document.createElement("div");
+        ingredientDiv.classList.add("flex", "gap-2", "mb-2", "items-center");
+
+        const ingredientNameInput = document.createElement("input");
+        ingredientNameInput.type = "text";
+        ingredientNameInput.name = "ingredients[][name]";
+        ingredientNameInput.placeholder = "Ingredient Name";
+        ingredientNameInput.classList.add("input", "input-bordered", "w-full");
+        ingredientDiv.appendChild(ingredientNameInput);
+
+        const ingredientValueInput = document.createElement("input");
+        ingredientValueInput.type = "text";
+        ingredientValueInput.name = "ingredients[][value]";
+        ingredientValueInput.placeholder = "Ingredient Value";
+        ingredientValueInput.classList.add("input", "input-bordered", "w-full");
+        ingredientDiv.appendChild(ingredientValueInput);
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.innerText = "Remove";
+        removeButton.classList.add("btn", "btn-error", "btn-sm");
+        removeButton.onclick = () => ingredientDiv.remove();
+        ingredientDiv.appendChild(removeButton);
+
+        document.getElementById("ingredients").appendChild(ingredientDiv);
+    }
+
+    // Convert markdown to textarea
+    function ConvertMarkdown () {
+        simplemde.toTextArea()
+    }
+
+    // Handle file select (for the dropzone)
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const fileName = file.name;
+            const dropzoneText = document.querySelector("#dropzone p");
+            dropzoneText.textContent = `Selected file: ${fileName}`;
+        }
+    }
+
+    // Set up drag-and-drop functionality
+    const dropzone = document.getElementById("dropzone");
+    dropzone.addEventListener("click", () => document.getElementById("fileInput").click());
+
+    dropzone.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        dropzone.classList.add("bg-gray-200");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+        dropzone.classList.remove("bg-gray-200");
+    });
+
+    dropzone.addEventListener("drop", (event) => {
+        event.preventDefault();
+        const file = event.dataTransfer.files[0];
+        if (file) {
+            document.getElementById("fileInput").files = event.dataTransfer.files;
+            const dropzoneText = document.querySelector("#dropzone p");
+            dropzoneText.textContent = `Selected file: ${file.name}`;
+        }
+    });
+</script>
+
+{% endblock content %}

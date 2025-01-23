@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Resep Favorit{% endblock title %}
+
+{% block content %}
+<div class="container mx-auto py-10 px-4 sm:px-6 lg:px-8">
+  <h1 class="text-4xl font-bold text-center mb-6">Favoutites</h1>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for recipe in recipes %}
+    <div class="card shadow-xl">
+      <figure>
+        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="w-full h-48 object-cover" />
+      </figure>
+      <div class="card-body">
+        <h2 class="card-title">{{ recipe.name }}</h2>
+        <p class="text-sm text-gray-500">{{ recipe.category }} | {{ recipe.area }}</p>
+        <p class="mt-2">{{ recipe.instructions|truncatechars:100 }}</p>
+        <div class="card-actions justify-end">
+          <a href="{% url 'detail-resep' recipe.id %}" class="btn btn-primary btn-sm">View Recipe</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  </div>
+
+ <!-- Pagination -->
+{% if is_paginated %}
+  <div class="mt-10 flex justify-center">
+    <div class="btn-group">
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}" class="join-item btn">«</a>
+      {% endif %}
+
+      <span class="btn">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}" class="join-item btn">»</a>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+</div>
+
+
+<script>
+    // Fungsi untuk membuka modal
+    function openDeleteModal(recipeId) {
+      document.getElementById('delete-modal-' + recipeId).classList.remove('hidden');
+    }
+  
+    // Fungsi untuk menutup modal
+    function closeDeleteModal(recipeId) {
+      document.getElementById('delete-modal-' + recipeId).classList.add('hidden');
+    }
+  </script>
+  
+{% endblock %}

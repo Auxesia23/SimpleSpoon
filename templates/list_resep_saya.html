@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Resep Makanan Saya{% endblock title %}
+
+{% block content %}
+<div class="container mx-auto py-10 px-4 sm:px-6 lg:px-8">
+  <h1 class="text-4xl font-bold text-center mb-6">My Recipes</h1>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for recipe in recipes %}
+    <div class="card shadow-xl">
+      <figure>
+        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="w-full h-48 object-cover" />
+      </figure>
+      <div class="card-body">
+        <h2 class="card-title">{{ recipe.name }}</h2>
+        <p class="text-sm text-gray-500">{{ recipe.category }} | {{ recipe.area }}</p>
+        <p class="mt-2">{{ recipe.instructions|truncatechars:100 }}</p>
+        <div class="card-actions justify-end">
+          <a href="{% url 'detail-resep' recipe.id %}" class="btn btn-primary btn-sm">View Recipe</a>
+           <!-- Tombol Edit -->
+           <a href="{% url 'edit-resep' recipe.id %}" class="btn btn-secondary btn-sm">Edit</a>
+      
+           <!-- Tombol Delete -->
+           <button onclick="openDeleteModal({{ recipe.id }})" class="btn btn-danger btn-sm">Delete</button>
+        </div>
+      </div>
+    </div>
+      
+      <!-- Modal Konfirmasi Hapus -->
+      <div id="delete-modal-{{ recipe.id }}" class="fixed inset-0 z-50 hidden bg-gray-800 bg-opacity-50 flex justify-center items-center">
+        <div class="bg-white p-6 rounded-lg max-w-sm w-full">
+          <h3 class="text-xl font-semibold mb-4">Are you sure you want to delete this recipe?</h3>
+          <p><strong>{{ recipe.name }}</strong></p>
+      
+          <form action="{% url 'hapus-resep' recipe.id %}" method="POST" class="mt-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <button type="button" onclick="closeDeleteModal({{ recipe.id }})" class="btn btn-secondary ml-2">Cancel</button>
+          </form>
+        </div>
+      </div>
+      
+    {% endfor %}
+  </div>
+
+ <!-- Pagination -->
+{% if is_paginated %}
+  <div class="mt-10 flex justify-center">
+    <div class="btn-group">
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}" class="join-item btn">«</a>
+      {% endif %}
+
+      <span class="btn">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}" class="join-item btn">»</a>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+</div>
+
+
+<script>
+    // Fungsi untuk membuka modal
+    function openDeleteModal(recipeId) {
+      document.getElementById('delete-modal-' + recipeId).classList.remove('hidden');
+    }
+  
+    // Fungsi untuk menutup modal
+    function closeDeleteModal(recipeId) {
+      document.getElementById('delete-modal-' + recipeId).classList.add('hidden');
+    }
+  </script>
+  
+{% endblock %}

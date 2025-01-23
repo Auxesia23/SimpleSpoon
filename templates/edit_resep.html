@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Resep{% endblock title %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Edit Recipe</h1>
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-4" id="form_resep">
+        {% csrf_token %}
+
+        <!-- Recipe Name -->
+        <div>
+            <label class="label">
+                <span class="label-text">Recipe Name</span>
+            </label>
+            <input value="{{ recipe.name }}" type="text" name="name" placeholder="Recipe Name" class="input input-bordered w-full" required>
+        </div>
+
+        <!-- Category -->
+        <div>
+            <label class="label">
+                <span class="label-text">Category</span>
+            </label>
+            <input value="{{ recipe.category }}" type="text" name="category" placeholder="Category" class="input input-bordered w-full" required>
+        </div>
+
+        <!-- Area -->
+        <div>
+            <label class="label">
+                <span class="label-text">Area</span>
+            </label>
+            <input value="{{ recipe.area }}" type="text" name="area" placeholder="Area" class="input input-bordered w-full" required>
+        </div>
+
+        <!-- Instructions -->
+        <div class="prose max-w-full">
+            <label class="label">
+                <span class="label-text">Instructions</span>
+            </label>
+            <textarea name="instructions" id="instructions" placeholder="Instructions" class="textarea textarea-bordered w-full" required>{{ recipe.instructions }}</textarea>
+        </div>
+
+        <!-- Video URL -->
+        <div>
+            <label class="label">
+                <span class="label-text">Video URL</span>
+            </label>
+            <input value="{{ recipe.videoUrl }}" type="url" name="videoUrl" placeholder="Video URL" class="input input-bordered w-full">
+        </div>
+
+        <!-- Image Upload -->
+        <div>
+            <label class="label">
+                <span class="label-text">Image</span>
+            </label>
+            <input type="file" name="image" class="file-input file-input-bordered w-full">
+        </div>
+
+        <!-- Ingredients Section -->
+        <div>
+            <label class="label">
+                <span class="label-text">Ingredients</span>
+            </label>
+            <div id="ingredients" class="space-y-2">
+                {% for ingredient in recipe.ingredients %}
+                <div class="flex gap-2 items-center" id="ingredient_{{ forloop.counter }}">
+                    <input value="{{ ingredient.name }}" type="text" name="ingredients[][name]" placeholder="Ingredient Name" class="input input-bordered w-full" required>
+                    <input value="{{ ingredient.value }}" type="text" name="ingredients[][value]" placeholder="Ingredient Value" class="input input-bordered w-full" required>
+                    <button type="button" class="btn btn-error btn-sm" onclick="removeIngredient({{ forloop.counter }})">Remove</button>
+                    <input type="hidden" name="ingredients[][id]" value="{{ ingredient.id }}">
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" onclick="addIngredient()" class="btn btn-primary mt-2">Add Ingredient</button>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+            <button onclick="ConvertMarkdown()" type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script>
+    // Add a new ingredient field
+    function addIngredient() {
+        const ingredientDiv = document.createElement("div");
+        ingredientDiv.classList.add("flex", "gap-2", "mb-2", "items-center");
+
+        const ingredientNameInput = document.createElement("input");
+        ingredientNameInput.type = "text";
+        ingredientNameInput.name = "ingredients[][name]";
+        ingredientNameInput.placeholder = "Ingredient Name";
+        ingredientNameInput.classList.add("input", "input-bordered", "w-full");
+        ingredientDiv.appendChild(ingredientNameInput);
+
+        const ingredientValueInput = document.createElement("input");
+        ingredientValueInput.type = "text";
+        ingredientValueInput.name = "ingredients[][value]";
+        ingredientValueInput.placeholder = "Ingredient Value";
+        ingredientValueInput.classList.add("input", "input-bordered", "w-full");
+        ingredientDiv.appendChild(ingredientValueInput);
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.innerText = "Remove";
+        removeButton.classList.add("btn", "btn-error", "btn-sm");
+        removeButton.onclick = () => ingredientDiv.remove();
+        ingredientDiv.appendChild(removeButton);
+
+        document.getElementById("ingredients").appendChild(ingredientDiv);
+    }
+
+    // Remove an ingredient field
+    function removeIngredient(index) {
+        const ingredientDiv = document.getElementById("ingredient_" + index);
+        if (ingredientDiv) {
+            ingredientDiv.remove();
+        }
+    }
+
+    // Initialize SimpleMDE
+    const simplemde = new SimpleMDE({ element: document.getElementById("instructions") });
+
+    function ConvertMarkdown () {
+        simplemde.toTextArea();
+   }
+</script>
+
+{% endblock content %}

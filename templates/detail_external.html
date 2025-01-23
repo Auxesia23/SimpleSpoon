@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ meal.strMeal }}{% endblock title %}
+
+{% block content %}
+
+<div class="container mx-auto py-10 px-4 sm:px-6 lg:px-8">
+  <h1 class="text-4xl font-bold text-center">{{ meal.strMeal }}</h1>
+  <img src="{{ meal.strMealThumb}}" alt="{{ meal.strMeal }}" class="my-6 w-full max-w-xl mx-auto rounded-lg shadow-md" />
+
+  <h2 class="text-2xl font-bold mt-8">Ingredients:</h2>
+  <ul class="list-disc pl-5">
+    {% for ingredient, measure in ingredients %}
+        <li>{{ ingredient }} - {{ measure }}</li>
+    {% endfor %}
+  </ul>
+
+  <h2 class="text-2xl font-bold mt-8">Instructions:</h2>
+  <div class="prose max-w-full">
+    <textarea class="max-w-full" id="instructions">{{ meal.strInstructions }}</textarea>
+  </div>
+
+  <h2 class="text-2xl font-bold mt-8">Tutorial Video:</h2>
+  
+  <div class="card card-compact bg-base-100 w-96 shadow-xl px-3">
+    <figure>
+      <img src="{{ meal.strMealThumb }}" alt="{{ video.title }}">
+    </figure>
+    <div class="card-body">
+      <h2 class="card-title">{{ video.title }}</h2>
+      <div class="card-actions justify-end">
+        <a href="{{ meal.strYoutube }}" target="_blank" class="btn btn-primary">Watch Now</a>
+      </div>
+    </div>
+  </div>
+
+    <!-- Back Button -->
+    <a href="{% url 'resep-external' %}" class="btn btn-primary mt-6">Back to Recipes</a>
+  
+
+  
+  
+  
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: 'en', includedLanguages: 'id,en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
+          'google_translate_element'
+        );
+      }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+
+
+
+
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script>
+  const simplemde = new SimpleMDE({ 
+    element: document.getElementById("instructions"),
+    toolbar: false, 
+  })
+
+  simplemde.togglePreview();
+</script>
+</div>
+
+{% endblock content %}
