@@ -9,7 +9,7 @@
 # https://github.com/docker/awesome-compose
 services:
   django:
-    image: fajargst/simplespoon:v1.2.2
+    image: fajargst/simplespoon:v1.2.5
     expose:
       - 8000
     env_file:
