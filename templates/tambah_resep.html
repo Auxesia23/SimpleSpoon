@@ -3,124 +3,212 @@
 {% block title %}Tambah Resep{% endblock title %}
 
 {% block content %}
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Add New Recipe</h1>
+<div class="min-h-screen bg-base-100">
+    <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 max-w-4xl">
+        <div class="bg-base-200 rounded-xl shadow-lg p-6 sm:p-8">
+            <h1 class="text-3xl font-bold text-center mb-8">Add New Recipe</h1>
 
-    <form method="POST" enctype="multipart/form-data" class="space-y-4" id="form_resep">
-        {% csrf_token %}
+            <form method="POST" enctype="multipart/form-data" class="space-y-6" id="form_resep">
+                {% csrf_token %}
 
-        <!-- Recipe Name -->
-        <div>
-            <label class="label">
-                <span class="label-text">Recipe Name</span>
-            </label>
-            <input type="text" name="name" placeholder="Recipe Name" class="input input-bordered w-full" required>
-        </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Basic Info Section -->
+                    <div class="space-y-4">
+                        <!-- Recipe Name -->
+                        <div>
+                            <label class="label font-medium">
+                                <span class="label-text">Recipe Name</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                name="name" 
+                                placeholder="Enter recipe name" 
+                                class="input input-bordered w-full focus:input-primary" 
+                                required
+                            >
+                        </div>
 
-        <!-- Category -->
-        <div>
-            <label class="label">
-                <span class="label-text">Category</span>
-            </label>
-            <input type="text" name="category" placeholder="Category" class="input input-bordered w-full" required>
-        </div>
+                        <!-- Category -->
+                        <div>
+                            <label class="label font-medium">
+                                <span class="label-text">Category</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                name="category" 
+                                placeholder="e.g., Main Course, Dessert" 
+                                class="input input-bordered w-full focus:input-primary" 
+                                required
+                            >
+                        </div>
 
-        <!-- Area -->
-        <div>
-            <label class="label">
-                <span class="label-text">Area</span>
-            </label>
-            <input type="text" name="area" placeholder="Area" class="input input-bordered w-full" required>
-        </div>
+                        <!-- Area -->
+                        <div>
+                            <label class="label font-medium">
+                                <span class="label-text">Area</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                name="area" 
+                                placeholder="e.g., Indonesian, Italian" 
+                                class="input input-bordered w-full focus:input-primary" 
+                                required
+                            >
+                        </div>
+                    </div>
 
-         <!-- Description -->
-         <div class="prose max-w-full">
-            <label class="label">
-                <span class="label-text">Description</span>
-            </label>
-            <textarea name="description" id="description" placeholder="Description" class="textarea textarea-bordered w-full" required></textarea>
-        </div>
-
-
-        <!-- Ingredients Section -->
-        <div>
-            <label class="label">
-                <span class="label-text">Ingredients</span>
-            </label>
-            <div id="ingredients" class="space-y-2">
-                <div class="flex gap-2 items-center">
-                    <input type="text" name="ingredients[][value]" placeholder="1/2kg" class="input input-bordered w-full" required>
-                    <input type="text" name="ingredients[][name]" placeholder="Dada Ayam" class="input input-bordered w-full" required>
+                    <!-- Image Upload Section -->
+                    <div class="space-y-4">
+                        <label class="label font-medium">
+                            <span class="label-text">Recipe Image</span>
+                        </label>
+                        <div 
+                            id="dropzone" 
+                            class="flex flex-col items-center justify-center p-8 border-2 border-dashed border-primary/50 rounded-xl cursor-pointer hover:bg-base-300/50 transition-colors duration-200"
+                        >
+                            <input type="file" name="image" id="fileInput" class="hidden" accept="image/*" onchange="handleFileSelect(event)">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-primary/70 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p class="text-center text-primary/70">
+                                Drag and drop an image here<br>or click to select
+                            </p>
+                            <p class="text-sm text-base-content/60 mt-2" id="selected-file"></p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <button type="button" onclick="addIngredient()" class="btn btn-primary mt-2">Add Ingredient</button>
+
+                <!-- Description -->
+                <div class="prose max-w-full">
+                    <label class="label font-medium">
+                        <span class="label-text">Description</span>
+                    </label>
+                    <textarea 
+                        name="description" 
+                        id="description" 
+                        placeholder="Write a brief description of your recipe" 
+                        class="textarea textarea-bordered w-full min-h-[100px] focus:textarea-primary" 
+                        required
+                    ></textarea>
+                </div>
+
+                <!-- Ingredients Section -->
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <label class="label font-medium">
+                            <span class="label-text">Ingredients</span>
+                        </label>
+                        <button 
+                            type="button" 
+                            onclick="addIngredient()" 
+                            class="btn btn-primary btn-sm gap-2"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Add Ingredient
+                        </button>
+                    </div>
+                    <div id="ingredients" class="space-y-3">
+                        <div class="flex gap-3 items-center">
+                            <input 
+                                type="text" 
+                                name="ingredients[][value]" 
+                                placeholder="Amount (e.g., 1/2 kg)" 
+                                class="input input-bordered w-full focus:input-primary" 
+                                required
+                            >
+                            <input 
+                                type="text" 
+                                name="ingredients[][name]" 
+                                placeholder="Ingredient name" 
+                                class="input input-bordered w-full focus:input-primary" 
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="prose max-w-full">
+                    <label class="label font-medium">
+                        <span class="label-text">Instructions</span>
+                    </label>
+                    <textarea 
+                        name="instructions" 
+                        id="instructions" 
+                        placeholder="Write the cooking instructions step by step" 
+                        class="textarea textarea-bordered w-full min-h-[200px] focus:textarea-primary" 
+                        required
+                    ></textarea>
+                </div>
+
+                <!-- Video URL -->
+                <div>
+                    <label class="label font-medium">
+                        <span class="label-text">Video URL</span>
+                        <span class="label-text-alt text-base-content/60">Optional</span>
+                    </label>
+                    <input 
+                        type="url" 
+                        name="videoUrl" 
+                        placeholder="YouTube video URL" 
+                        class="input input-bordered w-full focus:input-primary"
+                    >
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end pt-4">
+                    <button 
+                        onclick="ConvertMarkdown()" 
+                        type="submit" 
+                        class="btn btn-primary btn-wide"
+                    >
+                        Save Recipe
+                    </button>
+                </div>
+            </form>
         </div>
-
-
-        <!-- Instructions -->
-        <div class="prose max-w-full">
-            <label class="label">
-                <span class="label-text">Instructions</span>
-            </label>
-            <textarea name="instructions" id="instructions" placeholder="Instructions" class="textarea textarea-bordered w-full" required></textarea>
-        </div>
-
-        <!-- Video URL -->
-        <div>
-            <label class="label">
-                <span class="label-text">Video URL</span>
-            </label>
-            <input type="url" name="videoUrl" placeholder="Video URL" class="input input-bordered w-full">
-        </div>
-
-        <!-- Image Upload (Dropzone) -->
-        <div>
-            <label class="label">
-                <span class="label-text">Image</span>
-            </label>
-            <div id="dropzone" class="flex items-center justify-center p-4 border-2 border-dashed border-primary rounded-lg cursor-pointer">
-                <input type="file" name="image" id="fileInput" class="hidden" onchange="handleFileSelect(event)">
-                <p class="text-center text-primary">Drag and drop an image here or click to select</p>
-            </div>
-        </div>
-
-
-        <!-- Submit Button -->
-        <div>
-            <button onclick="ConvertMarkdown()" type="submit" class="btn btn-success">Submit</button>
-        </div>
-    </form>
+    </div>
 </div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
 <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
 <script>
     // Initialize SimpleMDE
-    const simplemde = new EasyMDE({ element: document.getElementById("instructions") });
+    const simplemde = new EasyMDE({ 
+        element: document.getElementById("instructions"),
+        placeholder: "Write the cooking instructions step by step...",
+        spellChecker: false,
+        status: false,
+        minHeight: "200px",
+    });
 
     // Function to add an ingredient input
     function addIngredient() {
         const ingredientDiv = document.createElement("div");
-        ingredientDiv.classList.add("flex", "gap-2", "mb-2", "items-center");
+        ingredientDiv.classList.add("flex", "gap-3", "items-center");
 
         const ingredientValueInput = document.createElement("input");
         ingredientValueInput.type = "text";
         ingredientValueInput.name = "ingredients[][value]";
-        ingredientValueInput.placeholder = "Ingredient Value";
-        ingredientValueInput.classList.add("input", "input-bordered", "w-full");
+        ingredientValueInput.placeholder = "Amount (e.g., 1/2 kg)";
+        ingredientValueInput.classList.add("input", "input-bordered", "w-full", "focus:input-primary");
+        ingredientValueInput.required = true;
         ingredientDiv.appendChild(ingredientValueInput);
 
         const ingredientNameInput = document.createElement("input");
         ingredientNameInput.type = "text";
         ingredientNameInput.name = "ingredients[][name]";
-        ingredientNameInput.placeholder = "Ingredient Name";
-        ingredientNameInput.classList.add("input", "input-bordered", "w-full");
+        ingredientNameInput.placeholder = "Ingredient name";
+        ingredientNameInput.classList.add("input", "input-bordered", "w-full", "focus:input-primary");
+        ingredientNameInput.required = true;
         ingredientDiv.appendChild(ingredientNameInput);
 
         const removeButton = document.createElement("button");
         removeButton.type = "button";
-        removeButton.innerText = "Remove";
-        removeButton.classList.add("btn", "btn-error", "btn-sm");
+        removeButton.classList.add("btn", "btn-error", "btn-square", "btn-sm");
+        removeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
         removeButton.onclick = () => ingredientDiv.remove();
         ingredientDiv.appendChild(removeButton);
 
@@ -128,8 +216,8 @@
     }
 
     // Convert markdown to textarea
-    function ConvertMarkdown () {
-        simplemde.toTextArea()
+    function ConvertMarkdown() {
+        simplemde.toTextArea();
     }
 
     // Handle file select (for the dropzone)
@@ -137,8 +225,7 @@
         const file = event.target.files[0];
         if (file) {
             const fileName = file.name;
-            const dropzoneText = document.querySelector("#dropzone p");
-            dropzoneText.textContent = `Selected file: ${fileName}`;
+            document.getElementById("selected-file").textContent = fileName;
         }
     }
 
@@ -148,20 +235,20 @@
 
     dropzone.addEventListener("dragover", (event) => {
         event.preventDefault();
-        dropzone.classList.add("bg-gray-200");
+        dropzone.classList.add("bg-base-300/50");
     });
 
     dropzone.addEventListener("dragleave", () => {
-        dropzone.classList.remove("bg-gray-200");
+        dropzone.classList.remove("bg-base-300/50");
     });
 
     dropzone.addEventListener("drop", (event) => {
         event.preventDefault();
+        dropzone.classList.remove("bg-base-300/50");
         const file = event.dataTransfer.files[0];
         if (file) {
             document.getElementById("fileInput").files = event.dataTransfer.files;
-            const dropzoneText = document.querySelector("#dropzone p");
-            dropzoneText.textContent = `Selected file: ${file.name}`;
+            document.getElementById("selected-file").textContent = file.name;
         }
     });
 </script>

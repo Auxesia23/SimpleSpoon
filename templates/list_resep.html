@@ -1,58 +1,147 @@
 {% extends 'base.html' %}
 
-{% block title %}Resep Makanan{% endblock title %}
+{% block title %}Explore Our Recipes - SimpleSpoon{% endblock title %}
 
 {% block content %}
-<div class="container mx-auto py-10 px-4 sm:px-6 lg:px-8">
-  <h1 class="text-4xl font-bold text-center mb-6">Explore Recipes</h1>
+<div class="min-h-screen bg-base-100">
+  <div class="container mx-auto py-10 px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <!-- Header Section -->
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <h1 class="text-4xl font-bold mb-4">Explore Our Recipes</h1>
+      <p class="text-lg text-base-content/70">
+        Discover delicious recipes shared by our community of food lovers
+      </p>
+    </div>
 
-  <!-- Search Form -->
-  <form method="get" action="" class="mb-6 flex justify-center">
-    <input
-      type="text"
-      name="q"
-      placeholder="Search recipes..."
-      value="{{ request.GET.q|default:'' }}"
-      class="input input-bordered w-full max-w-lg"
-    />
-    <button type="submit" class="btn btn-primary ml-2">Search</button>
-  </form>
+    <!-- Search and Filter Section -->
+    <div class="bg-base-200 rounded-xl p-6 mb-12">
+      <form method="get" action="" class="flex flex-col sm:flex-row gap-4 items-center justify-center">
+        <div class="relative flex-1 max-w-2xl">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-base-content/50">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </span>
+          <input
+            type="text"
+            name="q"
+            placeholder="Search recipes by name, category, ingredients or area..."
+            value="{{ request.GET.q|default:'' }}"
+            class="input input-bordered w-full pl-10 focus:input-primary"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary w-full sm:w-auto gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          Search
+        </button>
+      </form>
+    </div>
 
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-    {% for recipe in recipes %}
-    <div class="card shadow-xl">
-      <figure>
-        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="w-full h-48 object-cover" />
-      </figure>
-      <div class="card-body">
-        <h2 class="card-title">{{ recipe.name }}</h2>
-        <p class="text-sm text-gray-500">{{ recipe.category }} | {{ recipe.area }}</p>
-        <p class="mt-2">{{ recipe.description|truncatechars:100 }}</p>
-        <div class="card-actions justify-end">
-          <a href="{% url 'detail-resep' recipe.id %}" class="btn btn-primary btn-sm">View Recipe</a>
+    <!-- Recipe Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for recipe in recipes %}
+      <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden group">
+        <figure class="relative aspect-[4/3] overflow-hidden">
+          <img 
+            src="{{ recipe.image.url }}" 
+            alt="{{ recipe.name }}" 
+            class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" 
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </figure>
+        <div class="card-body">
+          <div class="flex items-start justify-between">
+            <div>
+              <h2 class="card-title text-lg font-bold hover:text-primary transition-colors">
+                {{ recipe.name }}
+              </h2>
+              <div class="flex gap-2 mt-1">
+                <span class="badge badge-primary">{{ recipe.category }}</span>
+                <span class="badge">{{ recipe.area }}</span>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 text-base-content/70 line-clamp-2">
+            {{ recipe.description|truncatechars:150 }}
+          </p>
+          <div class="card-actions justify-end mt-4">
+            <a 
+              href="{% url 'detail-resep' recipe.id %}" 
+              class="btn btn-primary btn-sm gap-2"
+            >
+              View Recipe
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
+      {% empty %}
+      <div class="col-span-full text-center py-12">
+        <div class="max-w-md mx-auto">
+          <svg class="w-16 h-16 mx-auto text-base-content/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+          <h3 class="text-lg font-semibold mb-2">No recipes found</h3>
+          <p class="text-base-content/60">
+            {% if request.GET.q %}
+              No recipes match your search criteria. Try different keywords or browse all recipes.
+            {% else %}
+              There are no recipes yet. Be the first to share a recipe!
+            {% endif %}
+          </p>
+          {% if request.GET.q %}
+            <a href="{% url 'list-resep' %}" class="btn btn-primary mt-4">View All Recipes</a>
+          {% else %}
+            <a href="{% url 'tambah-resep' %}" class="btn btn-primary mt-4">Add Recipe</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-  </div>
 
- <!-- Pagination -->
-{% if is_paginated %}
-  <div class="mt-10 flex justify-center">
-    <div class="btn-group">
-      {% if page_obj.has_previous %}
-      <a href="?page={{ page_obj.previous_page_number }}" class="join-item btn">«</a>
-      {% endif %}
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="mt-12 flex justify-center">
+      <div class="join">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+           class="join-item btn btn-primary"
+        >
+          «
+        </a>
+        {% endif %}
 
-      <span class="btn">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        <button class="join-item btn btn-primary">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </button>
 
-      {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}" class="join-item btn">»</a>
-      {% endif %}
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+           class="join-item btn btn-primary"
+        >
+          »
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Add Recipe CTA -->
+    <div class="text-center mt-16">
+      <a 
+        href="{% url 'tambah-resep' %}" 
+        class="btn btn-primary btn-lg gap-2"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Share Your Recipe
+      </a>
     </div>
   </div>
-{% endif %}
-
 </div>
 {% endblock %}

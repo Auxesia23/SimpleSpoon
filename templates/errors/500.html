@@ -1,0 +1,32 @@
+{% extends "errors/base_error.html" %}
+
+{% block title %}500 Server Error{% endblock %}
+
+{% block error_icon %}
+<div class="w-24 h-24 bg-error/10 rounded-full mx-auto flex items-center justify-center mb-6">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+</div>
+{% endblock %}
+
+{% block error_code %}500{% endblock %}
+
+{% block error_title %}Server Error{% endblock %}
+
+{% block error_message %}
+Oops! Something went wrong on our end. We've been notified and are working to fix it.
+{% endblock %}
+
+{% block additional_content %}
+<div class="mt-6">
+    <div class="text-sm text-base-content/70">
+        <p>You can try:</p>
+        <ul class="list-disc list-inside mt-2 space-y-1">
+            <li>Refreshing the page</li>
+            <li>Coming back in a few minutes</li>
+            <li>Clearing your browser cache</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

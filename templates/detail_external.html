@@ -3,68 +3,112 @@
 {% block title %}{{ meal.strMeal }}{% endblock title %}
 
 {% block content %}
-
-<div class="container mx-auto py-10 px-4 sm:px-6 lg:px-8">
-  <h1 class="text-4xl font-bold text-center">{{ meal.strMeal }}</h1>
-  <img src="{{ meal.strMealThumb}}" alt="{{ meal.strMeal }}" class="my-6 w-full max-w-xl mx-auto rounded-lg shadow-md" />
-
-  <h2 class="text-2xl font-bold mt-8">Ingredients:</h2>
-  <ul class="list-disc pl-5">
-    {% for ingredient, measure in ingredients %}
-        <li>{{ ingredient }} - {{ measure }}</li>
-    {% endfor %}
-  </ul>
-
-  <h2 class="text-2xl font-bold mt-8">Instructions:</h2>
-  <div class="prose max-w-full">
-    <textarea class="max-w-full" id="instructions">{{ meal.strInstructions }}</textarea>
+<div class="container mx-auto py-10 px-4 sm:px-6 lg:px-8 max-w-5xl">
+  <!-- Translation Widget -->
+  <div class="flex justify-end mb-6">
+    <div id="google_translate_element" class="bg-base-200 rounded-lg p-2"></div>
   </div>
 
-  <h2 class="text-2xl font-bold mt-8">Tutorial Video:</h2>
+  <h1 class="text-4xl font-bold text-center mb-8">{{ meal.strMeal }}</h1>
   
-  <div class="card card-compact bg-base-100 w-96 shadow-xl px-3">
-    <figure>
-      <img src="{{ meal.strMealThumb }}" alt="{{ video.title }}">
-    </figure>
-    <div class="card-body">
-      <h2 class="card-title">{{ video.title }}</h2>
-      <div class="card-actions justify-end">
-        <a href="{{ meal.strYoutube }}" target="_blank" class="btn btn-primary">Watch Now</a>
+  <div class="relative">
+    <img 
+      src="{{ meal.strMealThumb}}" 
+      alt="{{ meal.strMeal }}" 
+      class="w-full max-w-2xl mx-auto rounded-xl shadow-lg object-cover"
+    />
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-8 mt-12">
+    <div class="space-y-6">
+      <div>
+        <h2 class="text-2xl font-bold mb-4">Ingredients:</h2>
+        <ul class="space-y-2">
+          {% for ingredient, measure in ingredients %}
+            <li class="flex items-start space-x-2">
+              <span class="text-primary">•</span>
+              <span class="flex-1">
+                <span class="font-medium">{{ measure }}</span>
+                {{ ingredient }}
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div>
+        <h2 class="text-2xl font-bold mb-4">Instructions:</h2>
+        <div class="prose max-w-full">
+          <textarea class="w-full rounded-lg" id="instructions">{{ meal.strInstructions }}</textarea>
+        </div>
       </div>
     </div>
   </div>
 
-    <!-- Back Button -->
-    <a href="{% url 'resep-external' %}" class="btn btn-primary mt-6">Back to Recipes</a>
-  
+  <div class="mt-12">
+    <h2 class="text-2xl font-bold mb-6">Tutorial Video:</h2>
+    <div class="max-w-3xl mx-auto">
+      <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+        <figure class="aspect-w-16 aspect-h-9">
+          <img 
+            src="{{ meal.strMealThumb }}" 
+            alt="{{ meal.strMeal }}" 
+            class="object-cover w-full h-full rounded-t-xl"
+          />
+        </figure>
+        <div class="card-body p-6">
+          <h3 class="card-title text-xl">Watch Tutorial for {{ meal.strMeal }}</h3>
+          <div class="card-actions justify-end mt-4">
+            <a 
+              href="{{ meal.strYoutube }}" 
+              target="_blank" 
+              class="btn btn-primary"
+            >
+              Watch on YouTube
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  
-  
-  
-    <script type="text/javascript">
-      function googleTranslateElementInit() {
-        new google.translate.TranslateElement(
-          { pageLanguage: 'en', includedLanguages: 'id,en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
-          'google_translate_element'
-        );
-      }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    
+  <div class="flex justify-center mt-12">
+    <a 
+      href="{% url 'resep-external' %}" 
+      class="btn btn-primary btn-wide"
+    >
+      Back to Recipes
+    </a>
+  </div>
 
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement(
+        { 
+          pageLanguage: 'en', 
+          includedLanguages: 'id,en', 
+          layout: google.translate.TranslateElement.InlineLayout.SIMPLE 
+        },
+        'google_translate_element'
+      );
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-
-
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-<script>
-  const simplemde = new SimpleMDE({ 
-    element: document.getElementById("instructions"),
-    toolbar: false, 
-  })
-
-  simplemde.togglePreview();
-</script>
+  <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+  <script>
+    const simplemde = new SimpleMDE({ 
+      element: document.getElementById("instructions"),
+      toolbar: false, 
+    });
+    simplemde.togglePreview();
+  </script>
 </div>
-
 {% endblock content %}

@@ -1,0 +1,30 @@
+{% extends "errors/base_error.html" %}
+
+{% block title %}401 Unauthorized{% endblock %}
+
+{% block error_icon %}
+<div class="w-24 h-24 bg-error/10 rounded-full mx-auto flex items-center justify-center mb-6">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+    </svg>
+</div>
+{% endblock %}
+
+{% block error_code %}401{% endblock %}
+
+{% block error_title %}Authentication Required{% endblock %}
+
+{% block error_message %}
+Please log in to access this page. If you're already logged in, your session might have expired.
+{% endblock %}
+
+{% block additional_content %}
+<div class="mt-6">
+    <a href="{% url 'account_login' %}" class="btn btn-primary btn-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+        </svg>
+        Sign In
+    </a>
+</div>
+{% endblock %}

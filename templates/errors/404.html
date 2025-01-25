@@ -1,0 +1,32 @@
+{% extends "errors/base_error.html" %}
+
+{% block title %}404 Not Found{% endblock %}
+
+{% block error_icon %}
+<div class="w-24 h-24 bg-warning/10 rounded-full mx-auto flex items-center justify-center mb-6">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+</div>
+{% endblock %}
+
+{% block error_code_color %}text-warning{% endblock %}
+{% block error_code %}404{% endblock %}
+
+{% block error_title %}Page Not Found{% endblock %}
+
+{% block error_message %}
+Oops! We couldn't find the page you're looking for. It might have been moved or deleted.
+{% endblock %}
+
+{% block additional_content %}
+<div class="mt-6 text-sm text-base-content/70">
+    <p>Try searching for recipes instead:</p>
+    <a href="{% url 'list-resep' %}" class="btn btn-ghost btn-sm mt-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        Browse Recipes
+    </a>
+</div>
+{% endblock %}

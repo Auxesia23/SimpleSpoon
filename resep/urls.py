@@ -16,6 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from main.handlers import (
+    handler400, handler401, handler403, handler404,
+    handler405, handler500, handler502, handler503
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,3 +27,13 @@ urlpatterns = [
     path('accounts/', include('allauth.socialaccount.urls')),
     path('', include('main.urls')),
 ]
+
+# Error Handlers
+handler400 = 'main.handlers.handler400'  # Bad Request
+handler401 = 'main.handlers.handler401'  # Unauthorized
+handler403 = 'main.handlers.handler403'  # Forbidden
+handler404 = 'main.handlers.handler404'  # Not Found
+handler405 = 'main.handlers.handler405'  # Method Not Allowed
+handler500 = 'main.handlers.handler500'  # Server Error
+handler502 = 'main.handlers.handler502'  # Bad Gateway
+handler503 = 'main.handlers.handler503'  # Service Unavailable

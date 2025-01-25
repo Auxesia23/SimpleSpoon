@@ -1,0 +1,31 @@
+{% extends "errors/base_error.html" %}
+
+{% block title %}400 Bad Request{% endblock %}
+
+{% block error_icon %}
+<div class="w-24 h-24 bg-warning/10 rounded-full mx-auto flex items-center justify-center mb-6">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+</div>
+{% endblock %}
+
+{% block error_code_color %}text-warning{% endblock %}
+{% block error_code %}400{% endblock %}
+
+{% block error_title %}Bad Request{% endblock %}
+
+{% block error_message %}
+Sorry, we couldn't process your request. Please check your input and try again.
+{% endblock %}
+
+{% block additional_content %}
+<div class="mt-6 text-sm text-base-content/70">
+    <p>Common reasons for this error:</p>
+    <ul class="list-disc list-inside mt-2 space-y-1">
+        <li>Invalid form submission</li>
+        <li>Malformed request data</li>
+        <li>Missing required parameters</li>
+    </ul>
+</div>
+{% endblock %}
