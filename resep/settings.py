@@ -28,15 +28,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@u5kc@6lznq^g684d@0d4u#78))9n253_izkn)+1hffgl&$x*7'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-@u5kc@6lznq^g684d@0d4u#78))9n253_izkn)+1hffgl&$x*7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+if os.getenv('ENVIRONMENT') == 'dev' :
+    DEBUG = True
+else :
+    DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost',
-    'https://127.0.0.1',  # Add this if you're using localhost with IP
+    'https://127.0.0.1',
+    'https://simplespoon.online',
 ]
 
 STATIC_URL = '/static/'
@@ -152,24 +156,22 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login'
 
 
-DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#         'default': dj_database_url.parse(
-#             os.getenv('DB_URL')
-#         )
-#     }
-
-   
+if os.getenv('ENVIRONMENT') == 'dev' :
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+elif os.getenv('ENVIRONMENT') == 'prod' :
+    DATABASES = {
+                'default': dj_database_url.parse(
+                    os.getenv('DB_URL')
+                )
+            }
 
 
 # Password validation

@@ -37,6 +37,7 @@
                   tabindex="0"
                   class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                   <li><a href="{% url 'list-resep' %}">Explore</a></li>
+                  <li><a href="{% url 'resep-external' %}">Explore External Recipes</a></li>
                   <li><a href="{% url 'tambah-resep' %}">Share a Recipe</a></li>
                 </ul>
               </div>
@@ -60,6 +61,14 @@
                   <ul
                     tabindex="0"
                     class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                    {% if user.is_superuser or user.is_staff %}
+                      <li>
+                        <a  href="{% url 'admin:index' %}" class="justify-between">
+                          Admin Page
+                        </a>
+                      </li>
+                      <div class="border-t border-gray-300 my-2"></div>
+                    {% endif %}
                     <li>
                       <a  href="{% url 'resep-saya' %}" class="justify-between">
                         My Recipes

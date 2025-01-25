@@ -7,7 +7,7 @@
 # Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
 
 ARG PYTHON_VERSION=3.12.3
-FROM python:${PYTHON_VERSION}-slim as base
+FROM python:${PYTHON_VERSION}-slim AS base
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -48,4 +48,5 @@ COPY . .
 EXPOSE 8000
 
 # Run the application.
-CMD python3 manage.py collectstatic & python3 manage.py migrate & gunicorn resep.wsgi:application -b 0.0.0.0:8000
+CMD ["gunicorn", "resep.wsgi:application", "-b", "0.0.0.0:8000"]
+

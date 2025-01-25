@@ -33,6 +33,32 @@
             <input value="{{ recipe.area }}" type="text" name="area" placeholder="Area" class="input input-bordered w-full" required>
         </div>
 
+        <!-- Description -->
+        <div class="prose max-w-full">
+            <label class="label">
+                <span class="label-text">Description</span>
+            </label>
+            <textarea name="description" id="description" placeholder="Description" class="textarea textarea-bordered w-full" required>{{ recipe.description }}</textarea>
+        </div>
+
+        <!-- Ingredients Section -->
+        <div>
+            <label class="label">
+                <span class="label-text">Ingredients</span>
+            </label>
+            <div id="ingredients" class="space-y-2">
+                {% for ingredient in recipe.ingredients %}
+                <div class="flex gap-2 items-center" id="ingredient_{{ forloop.counter }}">
+                    <input value="{{ ingredient.value }}" type="text" name="ingredients[][value]" placeholder="1/2 kg" class="input input-bordered w-full" required>
+                    <input value="{{ ingredient.name }}" type="text" name="ingredients[][name]" placeholder="Dada Ayam" class="input input-bordered w-full" required>
+                    <button type="button" class="btn btn-error btn-sm" onclick="removeIngredient({{ forloop.counter }})">Remove</button>
+                    <input type="hidden" name="ingredients[][id]" value="{{ ingredient.id }}">
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" onclick="addIngredient()" class="btn btn-primary mt-2">Add Ingredient</button>
+        </div>
+
         <!-- Instructions -->
         <div class="prose max-w-full">
             <label class="label">
@@ -57,23 +83,6 @@
             <input type="file" name="image" class="file-input file-input-bordered w-full">
         </div>
 
-        <!-- Ingredients Section -->
-        <div>
-            <label class="label">
-                <span class="label-text">Ingredients</span>
-            </label>
-            <div id="ingredients" class="space-y-2">
-                {% for ingredient in recipe.ingredients %}
-                <div class="flex gap-2 items-center" id="ingredient_{{ forloop.counter }}">
-                    <input value="{{ ingredient.name }}" type="text" name="ingredients[][name]" placeholder="Ingredient Name" class="input input-bordered w-full" required>
-                    <input value="{{ ingredient.value }}" type="text" name="ingredients[][value]" placeholder="Ingredient Value" class="input input-bordered w-full" required>
-                    <button type="button" class="btn btn-error btn-sm" onclick="removeIngredient({{ forloop.counter }})">Remove</button>
-                    <input type="hidden" name="ingredients[][id]" value="{{ ingredient.id }}">
-                </div>
-                {% endfor %}
-            </div>
-            <button type="button" onclick="addIngredient()" class="btn btn-primary mt-2">Add Ingredient</button>
-        </div>
 
         <!-- Submit Button -->
         <div>
@@ -82,20 +91,13 @@
     </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
 <script>
     // Add a new ingredient field
     function addIngredient() {
         const ingredientDiv = document.createElement("div");
         ingredientDiv.classList.add("flex", "gap-2", "mb-2", "items-center");
-
-        const ingredientNameInput = document.createElement("input");
-        ingredientNameInput.type = "text";
-        ingredientNameInput.name = "ingredients[][name]";
-        ingredientNameInput.placeholder = "Ingredient Name";
-        ingredientNameInput.classList.add("input", "input-bordered", "w-full");
-        ingredientDiv.appendChild(ingredientNameInput);
 
         const ingredientValueInput = document.createElement("input");
         ingredientValueInput.type = "text";
@@ -103,6 +105,14 @@
         ingredientValueInput.placeholder = "Ingredient Value";
         ingredientValueInput.classList.add("input", "input-bordered", "w-full");
         ingredientDiv.appendChild(ingredientValueInput);
+        
+        const ingredientNameInput = document.createElement("input");
+        ingredientNameInput.type = "text";
+        ingredientNameInput.name = "ingredients[][name]";
+        ingredientNameInput.placeholder = "Ingredient Name";
+        ingredientNameInput.classList.add("input", "input-bordered", "w-full");
+        ingredientDiv.appendChild(ingredientNameInput);
+
 
         const removeButton = document.createElement("button");
         removeButton.type = "button";
@@ -123,7 +133,7 @@
     }
 
     // Initialize SimpleMDE
-    const simplemde = new SimpleMDE({ element: document.getElementById("instructions") });
+    const simplemde = new EasyMDE({ element: document.getElementById("instructions") });
 
     function ConvertMarkdown () {
         simplemde.toTextArea();

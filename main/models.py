@@ -4,10 +4,12 @@ from django.contrib.auth.models import User
 # Create your models here.
 from django.db import models
 
+
 class Recipe(models.Model):
     name = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
     area = models.CharField(max_length=255)
+    description = models.TextField()
     instructions = models.TextField()
     videoUrl = models.CharField(max_length=255)
     image = CloudinaryField('image')

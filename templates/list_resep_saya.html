@@ -15,7 +15,7 @@
       <div class="card-body">
         <h2 class="card-title">{{ recipe.name }}</h2>
         <p class="text-sm text-gray-500">{{ recipe.category }} | {{ recipe.area }}</p>
-        <p class="mt-2">{{ recipe.instructions|truncatechars:100 }}</p>
+        <p class="mt-2">{{ recipe.description|truncatechars:100 }}</p>
         <div class="card-actions justify-end">
           <a href="{% url 'detail-resep' recipe.id %}" class="btn btn-primary btn-sm">View Recipe</a>
            <!-- Tombol Edit -->

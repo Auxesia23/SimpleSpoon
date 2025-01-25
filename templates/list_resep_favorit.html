@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container mx-auto py-10 px-4 sm:px-6 lg:px-8">
-  <h1 class="text-4xl font-bold text-center mb-6">Favoutites</h1>
+  <h1 class="text-4xl font-bold text-center mb-6">Favourites</h1>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
     {% for recipe in recipes %}
@@ -15,7 +15,7 @@
       <div class="card-body">
         <h2 class="card-title">{{ recipe.name }}</h2>
         <p class="text-sm text-gray-500">{{ recipe.category }} | {{ recipe.area }}</p>
-        <p class="mt-2">{{ recipe.instructions|truncatechars:100 }}</p>
+        <p class="mt-2">{{ recipe.description|truncatechars:100 }}</p>
         <div class="card-actions justify-end">
           <a href="{% url 'detail-resep' recipe.id %}" class="btn btn-primary btn-sm">View Recipe</a>
         </div>

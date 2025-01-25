@@ -130,6 +130,7 @@ class CreateRecipeView(LoginRequiredMixin,View):
         name = request.POST.get('name')
         category = request.POST.get('category')
         area = request.POST.get('area')
+        description = request.POST.get('description')
         instructions = request.POST.get('instructions')
         raw_url = request.POST.get('videoUrl')
         image = request.FILES.get('image')
@@ -153,6 +154,7 @@ class CreateRecipeView(LoginRequiredMixin,View):
             ingredients=ingredients,
             category=category,
             area=area,
+            description=description,
             instructions=instructions,
             videoUrl=videoUrl,
             image=image,
@@ -208,6 +210,7 @@ class RecipeEditView(LoginRequiredMixin, UserPassesTestMixin, DetailView) :
         name = request.POST.get('name')
         category = request.POST.get('category')
         area = request.POST.get('area')
+        description = request.POST.get('description')
         instructions = request.POST.get('instructions')
         raw_url = request.POST.get('videoUrl')
         image = request.FILES.get('image')  # Jika ada gambar baru, akan diambil
@@ -230,6 +233,7 @@ class RecipeEditView(LoginRequiredMixin, UserPassesTestMixin, DetailView) :
         recipe.name = name
         recipe.category = category
         recipe.area = area
+        recipe.description = description
         recipe.instructions = instructions
         recipe.videoUrl = videoUrl
         recipe.ingredients = ingredients

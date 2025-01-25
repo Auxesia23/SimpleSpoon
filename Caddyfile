@@ -1,0 +1,10 @@
+localhost {
+  encode gzip
+  
+  handle_path /static/* {
+        root * /www/html
+        file_server
+    }
+
+  reverse_proxy django:8000
+}
