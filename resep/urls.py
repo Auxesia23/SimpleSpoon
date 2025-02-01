@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('allauth.socialaccount.urls')),
     path('', include('main.urls')),
+    path('', include('django_prometheus.urls')),
 ]
 
 # Error Handlers

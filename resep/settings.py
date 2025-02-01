@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_prometheus',
     "allauth_ui",
     "allauth",
     "allauth.account",
@@ -76,6 +77,7 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -84,6 +86,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = 'resep.urls'
@@ -114,25 +117,26 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
-        }
+        },
+        'OAUTH_PKCE_ENABLED': True,
     },
     'github': {
         'SCOPE': [
             'user',
+            'email',
         ],
+        'OAUTH_PKCE_ENABLED': True,
     }
 }
 
-
 AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
-    # `allauth` specific authentication methods, such as login by e-mail
     "allauth.account.auth_backends.AuthenticationBackend"
 )
 
-
+# Authentication Settings
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
@@ -169,7 +173,8 @@ if os.getenv('ENVIRONMENT') == 'dev' :
 elif os.getenv('ENVIRONMENT') == 'prod' :
     DATABASES = {
                 'default': dj_database_url.parse(
-                    os.getenv('DB_URL')
+                    os.getenv('DB_URL'),
+                    engine='django_prometheus.db.backends.postgresql'
                 )
             }
 

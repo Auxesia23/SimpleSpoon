@@ -9,7 +9,7 @@
 # https://github.com/docker/awesome-compose
 services:
   django:
-    image: fajargst/simplespoon:v1.2.5
+    image: fajargst/simplespoon:v1.3.1
     restart: always
     expose:
       - 8000
@@ -50,5 +50,30 @@ services:
       db:
         condition: service_healthy
     restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    expose:
+      - 9090
+    depends_on:
+      - django
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: always
+    expose:
+      - 3000 
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin  
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana-data:/var/lib/grafana  
 volumes:
   db-data:
+  grafana-data:

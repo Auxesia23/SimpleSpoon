@@ -1,11 +1,12 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
+from django_prometheus.models import ExportModelOperationsMixin
 # Create your models here.
 from django.db import models
 
 
-class Recipe(models.Model):
+class Recipe(ExportModelOperationsMixin('recipe'), models.Model):
     name = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
     area = models.CharField(max_length=255)
