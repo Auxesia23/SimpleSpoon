@@ -1,17 +1,16 @@
-FROM python:3.12.3-slim AS base
-
-ENV PYTHONDONTWRITEBYTECODE=1
-
-ENV PYTHONUNBUFFERED=1
+FROM python:3.12-slim-trixie
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /app
 
-RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    python -m pip install -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --locked --no-install-project
 
 COPY . .
 
-EXPOSE 8000
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked
 
-CMD ["gunicorn", "resep.wsgi:application", "-b", "0.0.0.0:8000"]
+CMD ["uv", "run", "gunicorn", "resep.wsgi:application", "-b", "0.0.0.0:8000"]
