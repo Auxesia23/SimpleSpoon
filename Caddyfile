@@ -1,4 +1,4 @@
-localhost {
+localhost:80 {
   encode gzip
 
   handle_path /static/* {
@@ -7,9 +7,4 @@ localhost {
     }
 
   reverse_proxy django:8000
-}
-
-
-dev.simplespoon.online {
-  reverse_proxy grafana:3000
 }
